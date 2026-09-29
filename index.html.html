@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva de Tipos de Piel | Skincare & Cosmética</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN for dynamic visual statistics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Plus Jakarta Sans for modern aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fcf8f6',
+                            100: '#f7ede8',
+                            200: '#edd8cd',
+                            300: '#e0bda9',
+                            400: '#ce997a',
+                            500: '#b87953',
+                            600: '#a36442',
+                            700: '#875035',
+                            800: '#6e412d',
+                            900: '#5a3727'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            min-height: 100vh;
+        }
+        .pinterest-card {
+            box-shadow: 0 10px 30px -5px rgba(184, 121, 83, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .pinterest-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 38px -4px rgba(184, 121, 83, 0.18), 0 6px 16px -2px rgba(0, 0, 0, 0.07);
+        }
+    </style>
+</head>
+<body class="bg-brand-50/50 text-slate-800 antialiased flex flex-col min-h-full">
+
+    <header class="w-full bg-white/80 backdrop-blur-md border-b border-brand-100 sticky top-0 z-50 py-4 px-6 shadow-sm">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center text-white font-bold text-lg shadow-inner">
+                    ✨
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-slate-900 tracking-tight">SkincareLab</h1>
+                    <p class="text-xs text-brand-600 font-medium uppercase tracking-wider">Infografía Interactiva</p>
+                </div>
+            </div>
+            <div class="hidden sm:flex items-center space-x-2">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-brand-100 text-brand-800">
+                    🟢 Listo para Testear
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 flex flex-col gap-8">
+        
+        <section class="pinterest-card bg-white rounded-3xl p-6 sm:p-8 border border-brand-100 text-center relative overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-40 h-40 bg-brand-100/50 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -left-12 -bottom-12 w-40 h-40 bg-amber-100/40 rounded-full blur-2xl pointer-events-none"></div>
+            
+            <span class="inline-block bg-brand-100 text-brand-700 text-xs font-semibold px-3.5 py-1.5 rounded-full uppercase tracking-wider mb-3">
+                Diagnóstico Cosmético Interactivo
+            </span>
+            <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+                Selecciona tu Tipo de Piel & Mira el Porcentaje Real
+            </h2>
+            <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+                El contador comienza en cero. Haz clic en el botón correspondiente a tu piel para registrar tu voto y visualizar el cálculo efectivo de la distribución poblacional y sus activos cosméticos.
+            </p>
+        </section>
+
+        <section class="pinterest-card bg-white rounded-3xl p-6 sm:p-8 border border-brand-100">
+            <div class="flex flex-col sm:flex-row items-center justify-between mb-6 pb-4 border-b border-slate-100 gap-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900">1. Elige tu Tipo de Piel</h3>
+                    <p class="text-xs sm:text-sm text-slate-500">Haz clic para activar el cálculo porcentual en vivo</p>
+                </div>
+                <button id="resetBtn" onclick="resetSelection()" class="hidden text-xs font-semibold px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full transition-all duration-200 flex items-center gap-1.5 shadow-sm">
+                    <span>↺ Reiniciar Selección (0%)</span>
+                </button>
+            </div>
+
+            <div id="skinButtonsGrid" class="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
+                <!-- Dynamically populated via JS -->
+            </div>
+            
+            <div id="selectionStatusMsg" class="mt-4 text-center text-xs font-medium text-brand-700 bg-brand-50/80 p-3 rounded-2xl hidden transition-all duration-300">
+                ✨ ¡Selección registrada! Los porcentajes se han actualizado de forma efectiva.
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            
+            <!-- Chart Container -->
+            <div class="pinterest-card bg-white rounded-3xl p-6 sm:p-8 border border-brand-100 md:col-span-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold text-slate-900">Distribución Porcentual</h3>
+                        <span id="totalVotersBadge" class="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full">
+                            0 votos registrados
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-6">Gráfico dinámico sincronizado con tu elección.</p>
+                </div>
+                
+                <div class="relative w-full h-64 sm:h-72 flex items-center justify-center my-auto">
+                    <canvas id="skinChart"></canvas>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-100 text-center">
+                    <p id="chartStatusText" class="text-xs text-slate-400">Esperando selección para mostrar porcentajes...</p>
+                </div>
+            </div>
+
+            <!-- Detailed Profile Card Container -->
+            <div id="detailCard" class="pinterest-card bg-white rounded-3xl p-6 sm:p-8 border border-brand-100 md:col-span-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <span id="detailIcon" class="text-3xl p-2.5 rounded-2xl bg-brand-50">💧</span>
+                            <div>
+                                <h3 id="detailTitle" class="text-xl font-bold text-slate-900">Esperando selección</h3>
+                                <span id="detailSubtitle" class="text-xs font-semibold text-brand-600 uppercase tracking-wider">Haz clic en tu piel arriba</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p id="detailDescription" class="text-slate-600 text-sm leading-relaxed mb-6">
+                        Cuando selecciones tu tipo de piel, se revelarán aquí las características dermatológicas detalladas, los ingredientes cosméticos esenciales y una recomendación experta adaptada.
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="bg-brand-50/60 p-4 rounded-2xl border border-brand-100/60">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-brand-800 mb-2 flex items-center gap-1.5">
+                                <span>🧪</span> Ingredientes Cosméticos Clave
+                            </h4>
+                            <p id="detailIngredients" class="text-xs sm:text-sm text-slate-700 font-medium">
+                                Selecciona una opción para descubrir los activos ideales.
+                            </p>
+                        </div>
+
+                        <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-100/60">
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-amber-800 mb-2 flex items-center gap-1.5">
+                                <span>⚠️</span> Consejo de Oro & Rutina
+                            </h4>
+                            <p id="detailTip" class="text-xs sm:text-sm text-slate-700 font-medium">
+                                Elige tu tipo de piel para desbloquear consejos profesionales personalizados.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                    <span>Estándar Dermatológico</span>
+                    <span class="font-semibold text-brand-600">Skincare Verified</span>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="pinterest-card bg-gradient-to-r from-brand-500 to-brand-700 rounded-3xl p-6 sm:p-8 text-white text-center flex flex-col items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl backdrop-blur-sm">
+                📌
+            </div>
+            <div class="max-w-xl">
+                <h3 class="text-xl sm:text-2xl font-bold mb-2">¿Te ha gustado esta infografía interactiva?</h3>
+                <p class="text-brand-100 text-xs sm:text-sm mb-4">
+                    Guarda este Pin en tus tableros de Pinterest o compártelo con tus amigas para ayudarles a conocer su tipo de piel exacto.
+                </p>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <button onclick="shareToPinterest()" class="bg-white text-brand-800 hover:bg-brand-50 font-semibold px-6 py-2.5 rounded-full text-xs sm:text-sm transition-all shadow-md flex items-center gap-2">
+                        <span>Pinéalo en Pinterest</span>
+                    </button>
+                    <button onclick="copyLink()" class="bg-brand-600/60 hover:bg-brand-600 text-white border border-white/20 font-semibold px-6 py-2.5 rounded-full text-xs sm:text-sm transition-all shadow-md flex items-center gap-2">
+                        <span>Copiar Enlace</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="w-full text-center py-6 text-xs text-slate-400 border-t border-slate-200/60 mt-auto">
+        <p>© 2026 SkincareLab & Infografías Interactivas. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Data structure for the 5 cosmetic skin types
+        const skinTypes = [
+            {
+                id: 'normal',
+                name: 'Normal',
+                icon: '🌸',
+                color: '#60a5fa', // Blue
+                subtitle: 'Equilibrada y Radiante',
+                description: 'Ni muy seca ni muy grasa. Presenta poros finos, buena circulación sanguínea, textura suave y sin imperfecciones severas. Requiere mantenimiento preventivo.',
+                ingredients: 'Ácido Hialurónico, Vitamina C, Niacinamida y Antioxidantes.',
+                tip: 'Mantén una rutina sencilla basada en limpieza suave, hidratación diaria y protector solar SPF 50 para preservar su juventud.'
+            },
+            {
+                id: 'seca',
+                name: 'Seca',
+                icon: '💧',
+                color: '#fb923c', // Orange
+                subtitle: 'Falta de Hidratación y Lípidos',
+                description: 'Produce menos sebo que la piel normal, lo que causa carencia de lípidos para retener humedad. Tiende a sentirse tirante, áspera o con descamación.',
+                ingredients: 'Ceramidas, Manteca de Karité, Escualano y Glicerina.',
+                tip: 'Evita limpiadores espumosos agresivos. Prefiere texturas en crema o aceite y aplica sérums hidratantes sobre la piel ligeramente húmeda.'
+            },
+            {
+                id: 'grasa',
+                name: 'Grasa',
+                icon: '🌿',
+                color: '#34d399', // Green
+                subtitle: 'Exceso de Sebo y Poros Dilatados',
+                description: 'Caracterizada por una producción hiperactiva de sebo por las glándulas sebáceas. Brillo persistente, poros dilatados y propensión a puntos negros y brotes.',
+                ingredients: 'Ácido Salicílico (BHA), Zinc, Arcilla Caolín y Ácido Glicólico.',
+                tip: 'No saltes la hidratación: usa geles hidratantes libres de aceite (oil-free) y exfoliantes químicos suaves para mantener los poros limpios.'
+            },
+            {
+                id: 'mixta',
+                name: 'Mixta',
+                icon: '✨',
+                color: '#a78bfa', // Purple
+                subtitle: 'Dual (Zona T Grasa + Mejiillas Secas)',
+                description: 'La combinación más común. La zona T (frente, nariz y barbilla) presenta exceso de grasa y brillo, mientras que las mejillas tienden a ser normales o secas.',
+                ingredients: 'Niacinamida, Ácido Hialurónico ligero y retinoides suaves.',
+                tip: 'Aplica multizoning: utiliza productos matificantes en la zona T e hidratantes más ricos exclusivamente en las mejillas.'
+            },
+            {
+                id: 'sensible',
+                name: 'Sensible',
+                icon: '🍃',
+                color: '#f43f5e', // Rose/Red
+                subtitle: 'Reactiva y Propensa a Rojeces',
+                description: 'Alta reactividad frente a factores externos (clima, cosméticos, estrés). Presenta rojeces frecuentes, sensación de ardor, picor o tirantez.',
+                ingredients: 'Centella Asiática, Pantenol, Ceramidas y Alantoína.',
+                tip: 'Huye de fragancias artificiales, alcoholes secantes y exfoliantes físicos fuertes. Realiza siempre una prueba de parche antes de estrenar cosméticos.'
+            }
+        ];
+
+        let selectedSkinId = null;
+        let chartInstance = null;
+
+        // Initialize UI buttons
+        function renderButtons() {
+            const grid = document.getElementById('skinButtonsGrid');
+            grid.innerHTML = '';
+            
+            skinTypes.forEach(skin => {
+                const isSelected = selectedSkinId === skin.id;
+                const btn = document.createElement('button');
+                btn.className = `flex flex-col items-center justify-center p-4 rounded-2xl border transition-all duration-300 relative group ${
+                    isSelected 
+                        ? 'border-brand-500 bg-brand-50 shadow-md ring-2 ring-brand-400/50 scale-[1.02]' 
+                        : 'border-slate-200/80 bg-white hover:border-brand-300 hover:bg-brand-50/30'
+                }`;
+                btn.onclick = () => selectSkinType(skin.id);
+                
+                btn.innerHTML = `
+                    <span class="text-2xl mb-1.5 group-hover:scale-110 transition-transform">${skin.icon}</span>
+                    <span class="font-bold text-xs sm:text-sm text-slate-800">${skin.name}</span>
+                    <span id="badge-${skin.id}" class="text-[10px] font-semibold text-slate-500 mt-1 px-2 py-0.5 rounded-full bg-slate-100">
+                        ${selectedSkinId === null ? '0%' : 'Calculando...'}
+                    </span>
+                `;
+                grid.appendChild(btn);
+            });
+        }
+
+        // Calculate dynamic percentages starting at 0% when nothing is selected
+        function getCalculatedData() {
+            return skinTypes.map(skin => {
+                let percentage = 0.0;
+                if (selectedSkinId !== null) {
+                    // If this skin is selected, it takes 100% (or effective weight distribution)
+                    percentage = (skin.id === selectedSkinId) ? 100.0 : 0.0;
+                }
+                return {
+                    ...skin,
+                    percentage: percentage
+                };
+            });
+        }
+
+        // Initialize Chart.js instance with zero values
+        function initChart() {
+            const ctx = document.getElementById('skinChart').getContext('2d');
+            const dataWithPerc = getCalculatedData();
+
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: dataWithPerc.map(s => s.name),
+                    datasets: [{
+                        data: dataWithPerc.map(s => s.percentage),
+                        backgroundColor: dataWithPerc.map(s => s.color),
+                        borderWidth: 3,
+                        borderColor: '#ffffff',
+                        hoverOffset: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    family: "'Plus Jakarta Sans', sans-serif",
+                                    weight: '600',
+                                    size: 11
+                                },
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '68%'
+                }
+            });
+        }
+
+        // Update Chart data and UI elements on selection
+        function updateChartData() {
+            if (!chartInstance) return;
+            const dataWithPerc = getCalculatedData();
+            
+            chartInstance.data.datasets[0].data = dataWithPerc.map(s => s.percentage);
+            chartInstance.update();
+
+            // Update button badges
+            dataWithPerc.forEach(skin => {
+                const badge = document.getElementById(`badge-${skin.id}`);
+                if (badge) {
+                    badge.innerText = `${skin.percentage}%`;
+                    if (selectedSkinId === skin.id) {
+                        badge.className = 'text-[10px] font-bold text-brand-700 mt-1 px-2 py-0.5 rounded-full bg-brand-200 animate-pulse';
+                    } else {
+                        badge.className = 'text-[10px] font-semibold text-slate-400 mt-1 px-2 py-0.5 rounded-full bg-slate-100';
+                    }
+                }
+            });
+
+            // Update status text
+            if (selectedSkinId === null) {
+                document.getElementById('totalVotersBadge').innerText = '0 votos registrados';
+                document.getElementById('chartStatusText').innerText = 'Esperando selección para mostrar porcentajes...';
+            } else {
+                document.getElementById('totalVotersBadge').innerText = '1 voto registrado (Activo)';
+                document.getElementById('chartStatusText').innerText = 'Gráfico actualizado al 100% con tu selección.';
+            }
+        }
+
+        // Select skin type and update details view & statistics
+        function selectSkinType(id) {
+            selectedSkinId = id;
+            const skin = skinTypes.find(s => s.id === id);
+
+            // Update UI buttons state
+            renderButtons();
+            updateChartData();
+
+            // Show reset button & status msg
+            document.getElementById('resetBtn').classList.remove('hidden');
+            const statusMsg = document.getElementById('selectionStatusMsg');
+            statusMsg.classList.remove('hidden');
+            statusMsg.innerText = `✨ Piel seleccionada: [${skin.name.toUpperCase()}]. El gráfico se ha actualizado de forma efectiva.`;
+
+            // Update detail card content
+            document.getElementById('detailIcon').innerText = skin.icon;
+            document.getElementById('detailTitle').innerText = `Piel ${skin.name}`;
+            document.getElementById('detailSubtitle').innerText = skin.subtitle;
+            document.getElementById('detailDescription').innerText = skin.description;
+            document.getElementById('detailIngredients').innerText = skin.ingredients;
+            document.getElementById('detailTip').innerText = skin.tip;
+
+            // Scroll smoothly to detail card on mobile
+            if (window.innerWidth < 768) {
+                document.getElementById('detailCard').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Reset selection back to zero
+        function resetSelection() {
+            selectedSkinId = null;
+            renderButtons();
+            updateChartData();
+
+            document.getElementById('resetBtn').classList.add('hidden');
+            document.getElementById('selectionStatusMsg').classList.add('hidden');
+
+            // Reset detail card
+            document.getElementById('detailIcon').innerText = '💧';
+            document.getElementById('detailTitle').innerText = 'Esperando selección';
+            document.getElementById('detailSubtitle').innerText = 'Haz clic en tu piel arriba';
+            document.getElementById('detailDescription').innerText = 'Cuando selecciones tu tipo de piel, se revelarán aquí las características dermatológicas detalladas, los ingredientes cosméticos esenciales y una recomendación experta adaptada.';
+            document.getElementById('detailIngredients').innerText = 'Selecciona una opción para descubrir los activos ideales.';
+            document.getElementById('detailTip').innerText = 'Elige tu tipo de piel para desbloquear consejos profesionales personalizados.';
+        }
+
+        // Sharing functions
+        function shareToPinterest() {
+            const url = encodeURIComponent(window.location.href);
+            const description = encodeURIComponent("¡Descubre tu tipo de piel con esta infografía interactiva y comprueba los resultados en tiempo real! 🌸💧");
+            window.open(`https://www.pinterest.com/pin/create/button/?url=${url}&description=${description}`, '_blank');
+        }
+
+        function copyLink() {
+            const dummy = document.createElement('textarea');
+            document.body.appendChild(dummy);
+            dummy.value = window.location.href;
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            
+            showToast("¡Enlace copiado al portapapeles con éxito!");
+        }
+
+        function showToast(msg) {
+            const div = document.createElement('div');
+            div.className = 'fixed bottom-5 right-5 bg-slate-900 text-white text-xs px-4 py-3 rounded-2xl shadow-xl z-50 transition-all duration-300 flex items-center gap-2';
+            div.innerHTML = `<span>✅</span> <span>${msg}</span>`;
+            document.body.appendChild(div);
+            setTimeout(() => {
+                div.style.opacity = '0';
+                setTimeout(() => div.remove(), 300);
+            }, 3000);
+        }
+
+        // Run on load
+        window.onload = function() {
+            renderButtons();
+            initChart();
+        };
+    </script>
+</body>
+</html>
